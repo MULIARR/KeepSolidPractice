@@ -1,0 +1,60 @@
+@startuml erd
+
+hide methods
+hide stereotypes
+skinparam linetype ortho
+
+
+entity "users" as users {
+  *user_id : BIGINT <<PK>>
+  --
+  email : VARCHAR(255)
+  hashed_password : VARCHAR(255)
+  role : enum
+  created_at : datetime
+}
+
+entity "books" as books {
+  *book_id : BIGINT <<PK>>
+  --
+  title : VARCHAR(255)
+  created_at : datetime
+}
+
+entity "authors" as authors {
+  *author_id : BIGINT <<PK>>
+  --
+  name : VARCHAR(255)
+}
+
+entity "genres" as genres {
+  *genre_id : BIGINT <<PK>>
+  --
+  name : VARCHAR(255)
+}
+
+entity "book_authors" as book_authors {
+  *book_id : BIGINT <<FK>>
+  *author_id : BIGINT <<FK>>
+}
+
+entity "book_genres" as book_genres {
+  *book_id : BIGINT <<FK>>
+  *genre_id : BIGINT <<FK>>
+}
+
+entity "user_favorites" as user_favorites {
+  *user_id : BIGINT <<FK>>
+  *book_id : BIGINT <<FK>>
+}
+
+users ||--|{ user_favorites : "has favorites"
+books ||--|{ user_favorites : "is in favorites"
+
+books ||--|{ book_authors : "has authors"
+authors ||--|{ book_authors : "writes"
+
+books ||--|{ book_genres : "has genres"
+genres ||--|{ book_genres : "categorized by"
+
+@enduml
